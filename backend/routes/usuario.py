@@ -17,17 +17,30 @@ def listar_usuarios():
 # POST crear usuario
 @usuarios_bp.route("/usuarios", methods=["POST"])
 def crear_usuario():
+    # Intenta obtener el JSON de la solicitud
     data = request.json
-    u = Usuario(
-        nombre=data["nombre"],
-        apellido=data["apellido"],
-        email=data["email"],
-        password=data["password"],
-        is_deleted="N"
-    )
-    db.session.add(u)
-    db.session.commit()
-    return jsonify({"message": "Usuario creado", "id": u.id})
+    
+    # Valida si la data es None
+    if not data:
+        return jsonify({"message": "La peticion debe tener un cuerpo JSON valido"}), 400
+
+    
+    try:
+        u = Usuario()
+        u.nombre = data["nombre"]
+        u.apellido = data["apellido"],
+        u.email = data["email"],
+        u.password = data["password"],
+        u.is_deleted = "N"
+        
+        db.session.add(u)
+        db.session.commit()
+    
+        return jsonify({"message": "Usuario creado", "id": u.id}), 201
+    
+    except KeyError as e:
+        return jsonify({"message": f"Faltan datos en el JSON: {e}"}), 400
+
 
 # GET usuario por id
 @usuarios_bp.route("/usuarios/<int:id>", methods=["GET"])
@@ -39,6 +52,10 @@ def obtener_usuario(id):
 @usuarios_bp.route("/usuarios/<int:id>", methods=["PUT"])
 def actualizar_usuario(id):
     data = request.json
+
+    if not data:
+        return jsonify({"message": "La petición debe tener un cuerpo JSON válido"}), 400
+
     u = Usuario.query.get_or_404(id)
     u.nombre = data.get("nombre", u.nombre)
     u.apellido = data.get("apellido", u.apellido)
