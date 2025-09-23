@@ -4,7 +4,7 @@
 
 <template>
   <h1>Este es el Home</h1>
-  <!-- <RegistrarUsuario></RegistrarUsuario> -->
+  <RegistrarUsuario></RegistrarUsuario>
   
 </template>
 

@@ -1,4 +1,4 @@
-<script></script>
+<script setup lang="ts"></script>
 <template>
   <div class="form-container">
         <h2>Registro de Usuario</h2>
